@@ -1,2 +1,2 @@
 # amplifyapptest
-Test deploying an app on AWS
+Attempting to create a cicd with docker and sample code
