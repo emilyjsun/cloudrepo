@@ -13,8 +13,8 @@ jobs:
       run: | 
         npm run test
         echo "Running app.test.js"
-      continue-on-error: 'false'
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     name: Deploy
     steps:
