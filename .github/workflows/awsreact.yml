@@ -6,10 +6,12 @@ on:
     branches: [ main ]
 jobs:
   test:
-    name: Running Tests
-    run: | 
-      npm run test
-      echo "Running app.test.js"
+    name: Test
+    steps:
+    - name: Running Local tests
+      run: | 
+        npm run test
+        echo "Running app.test.js"
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
