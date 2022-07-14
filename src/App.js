@@ -1,13 +1,20 @@
 import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Navigationbar from "./Components/Navigationbar.js";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+
 
 function App() {
   return (
     <div className="App">
+      <Navigationbar></Navigationbar>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Hello World
+          {/* Edit <code>src/App.js</code> and save to reload. */}
         </p>
         <a
           className="App-link"
@@ -15,7 +22,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Hello World
         </a>
       </header>
     </div>
