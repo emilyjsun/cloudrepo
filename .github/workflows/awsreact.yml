@@ -5,6 +5,11 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
+  test:
+    name: Running Tests
+    run: | 
+      npm run test
+      echo "Running app.test.js"
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
