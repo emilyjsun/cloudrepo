@@ -1,2 +1,2 @@
-# amplifyapptest
-Test deploying an app on AWS
+# testtesttest
+experimenting with different things lmao
