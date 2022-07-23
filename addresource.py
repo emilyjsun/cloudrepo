@@ -17,7 +17,7 @@ print(paramObj)
 print(varObj)
 print(outputObj)
 
-print("Options: StorageAccount, ContainerRegistry")
+print("Options: StorageAccount, ContainerRegistry, PostgreSQLFlexible")
 service = input("Pick a Service: ")
 
 #adds storage account resource
@@ -67,6 +67,7 @@ if(service == "StorageAccount"):
         "value": "[reference(parameters('storageName')).primaryEndpoints]"
     }
     })
+#adds container registry service
 elif(service == "ContainerRegistry"):
     paramObj.update({
     "acrName": {
@@ -114,7 +115,88 @@ elif(service == "ContainerRegistry"):
       "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('acrName'))).loginServer]"
     }
     })
-
+elif(service == "PostgreSQLFlexible"):
+    paramObj.update({
+        "administratorLogin": {
+        "type": "string"
+      },
+      "administratorLoginPassword": {
+        "type": "secureString"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]"
+      },
+      "serverName": {
+        "type": "string"
+      },
+      "serverEdition": {
+        "type": "string",
+        "defaultValue": "GeneralPurpose"
+      },
+      "skuSizeGB": {
+        "type": "int",
+        "defaultValue": 128
+      },
+      "dbInstanceType": {
+        "type": "string",
+        "defaultValue": "Standard_D4ds_v4"
+      },
+      "haMode": {
+        "type": "string",
+        "defaultValue": "ZoneRedundant"
+      },
+      "availabilityZone": {
+        "type": "string",
+        "defaultValue": "1"
+      },
+      "version": {
+        "type": "string",
+        "defaultValue": "12"
+      },
+      "virtualNetworkExternalId": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "privateDnsZoneArmResourceId": {
+        "type": "string",
+        "defaultValue": ""
+      }
+    })
+    resourceObj.append({
+        "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+        "apiVersion": "2021-06-01",
+        "name": "[parameters('serverName')]",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "[parameters('dbInstanceType')]",
+          "tier": "[parameters('serverEdition')]"
+        },
+        "properties": {
+          "version": "[parameters('version')]",
+          "administratorLogin": "[parameters('administratorLogin')]",
+          "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+          "network": {
+            "delegatedSubnetResourceId": "[if(empty(parameters('virtualNetworkExternalId')), json('null'), json(format('{0}/subnets/{1}', parameters('virtualNetworkExternalId'), parameters('subnetName'))))]",
+            "privateDnsZoneArmResourceId": "[if(empty(parameters('virtualNetworkExternalId')), json('null'), parameters('privateDnsZoneArmResourceId'))]"
+          },
+          "highAvailability": {
+            "mode": "[parameters('haMode')]"
+          },
+          "storage": {
+            "storageSizeGB": "[parameters('skuSizeGB')]"
+          },
+          "backup": {
+            "backupRetentionDays": 7,
+            "geoRedundantBackup": "Disabled"
+          },
+          "availabilityZone": "[parameters('availabilityZone')]"
+        }
+    })
 else:
     print("invalid")
 

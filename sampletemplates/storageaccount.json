@@ -49,3 +49,10 @@
         }
     }
 }
+
+//   deployment for azure CLI:
+// az deployment group create 
+// --name acrdeploy 
+// --resource-group armapp 
+// --template-file $templateFile 
+// --parameters storageName=dccdtest1
