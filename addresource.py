@@ -17,14 +17,14 @@ outputObj = store["outputs"]
 # print(varObj)
 # print(outputObj)
 
-resourceList = ["StorageAccount", "ContainerRegistry", "PostgreSQLFlexible", "Kubernetes"]
+resourceList = ["StorageAccount", "ContainerRegistry", "PostgreSQLFlexible", "Kubernetes", "Done"]
 servicesList = []
 
 
 service = ""
 
 while(service != "Done"):
-    print("Options: Done, ", end='')
+    print("Options: ", end='')
     print(', '.join(resourceList))
     service = input("Pick a Service: ")
 
