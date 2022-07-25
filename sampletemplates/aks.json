@@ -81,7 +81,7 @@
 
 //   deployment for azure CLI:
 // az deployment group create \
-// --name adeploy \
+// --name aksdeploy \
 // --resource-group armapp \
 // --template-file $templateFile \
 // --parameters clusterName=dccdcluster1 dnsPrefix=dccdaks linuxAdminUsername=aksadmin sshRSAPublicKey
