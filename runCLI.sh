@@ -1,22 +1,23 @@
 az login
 
 templateFile="./personalizedeploy.json"
+parameterFile="./personalizedeploy.parameters.json"
 
 echo "creating resource group..."
 az group create \
---name bashresourcegrouptest \
+--name paramsgroup \
 --location "eastus"
 echo "resource group created"
 
-python addresource.py
+python updateparams.py
 
 echo "deploying"
 
 az deployment group create \
---name usingbash \
---resource-group bashresourcegrouptest \
+--name testingwithparams \
+--resource-group paramsgroup \
 --template-file $templateFile \
---parameters storageName=bashstoragetest1 
+--parameters $parameterFile 
 #acrName=acrscripttest2
 
 echo "deployment complete"
