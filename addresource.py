@@ -18,6 +18,7 @@ outputObj = store["outputs"]
 # print(outputObj)
 
 resourceList = ["StorageAccount", "ContainerRegistry", "PostgreSQLFlexible", "Kubernetes"]
+servicesList = []
 
 
 service = ""
@@ -30,6 +31,7 @@ while(service != "Done"):
     #adds storage account resource
     if(service == "StorageAccount"):
         resourceList.remove("StorageAccount")
+        servicesList.append("StorageAccount")
         paramObj.update({
             "storageName": {
             "type": "string",
@@ -78,6 +80,7 @@ while(service != "Done"):
     #adds container registry service
     elif(service == "ContainerRegistry"):
         resourceList.remove("ContainerRegistry")
+        servicesList.append("ContainerRegistry")
         paramObj.update({
         "acrName": {
         "type": "string",
@@ -127,6 +130,7 @@ while(service != "Done"):
     #add postgresql flexible server    
     elif(service == "PostgreSQLFlexible"):
         resourceList.remove("PostgreSQLFlexible")
+        servicesList.append("PostgreSQLFlexible")
         paramObj.update({
             "administratorLogin": {
             "type": "string"
@@ -209,6 +213,8 @@ while(service != "Done"):
             }
         })
     elif(service == "Kubernetes"):
+        resourceList.remove("Kubernetes")
+        servicesList.append("Kubernetes")
         paramObj.update({
         "clusterName": {
         "type": "string",
