@@ -15,13 +15,12 @@ python clean.py
 
 python updateparams.py
 
-echo "deploying"
+echo "Deploying..."
 
 az deployment group create \
 --name clideploy \
 --resource-group $resourceGroupName \
 --template-file $templateFile \
 --parameters $parameterFile 
-#acrName=acrscripttest2
 
-echo "deployment complete"
+echo "Deployment Complete!"
