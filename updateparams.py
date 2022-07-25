@@ -6,14 +6,14 @@ store = json.loads(file.read())
 file.close()
 
 
-print(store)
+# print(store)
 paramObj = store["parameters"]
-print(servicesList)
+# print(servicesList)
     
 
 
 for s in servicesList:
-    print(s)
+    # print(s)
     if(s == "StorageAccount"):
         storageName = input("Storage Name: ")
         paramObj.update({

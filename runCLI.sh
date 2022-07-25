@@ -16,10 +16,9 @@ python clean.py
 python updateparams.py
 
 echo "deploying"
-read -p 'Deployment Name: ' deployName
 
 az deployment group create \
---name $deployName \
+--name clideploy \
 --resource-group $resourceGroupName \
 --template-file $templateFile \
 --parameters $parameterFile 

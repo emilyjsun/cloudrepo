@@ -6,7 +6,7 @@ store = json.loads(file.read())
 file.close()
 
 
-print(store)
+# print(store)
 resourceObj = store["resources"]
 paramObj = store["parameters"]
 varObj = store["variables"]
