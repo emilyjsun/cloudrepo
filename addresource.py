@@ -17,7 +17,7 @@ outputObj = store["outputs"]
 # print(varObj)
 # print(outputObj)
 
-resourceList = ["StorageAccount", "ContainerRegistry", "PostgreSQLFlexible", "Kubernetes", "Done"]
+resourceList = ["StorageAccount", "ContainerRegistry", "PostgreSQLFlexible", "Kubernetes", "AppService", "Done"]
 servicesList = []
 
 
@@ -155,7 +155,7 @@ while(service != "Done"):
         },
         "dbInstanceType": {
             "type": "string",
-            "defaultValue": "Standard_D4ds_v4"
+            "defaultValue": "Standard_D2ds_v4"
         },
         "haMode": {
             "type": "string",
@@ -212,6 +212,7 @@ while(service != "Done"):
             "availabilityZone": "[parameters('availabilityZone')]"
             }
         })
+    #adds kubernetes
     elif(service == "Kubernetes"):
         resourceList.remove("Kubernetes")
         servicesList.append("Kubernetes")
@@ -219,36 +220,36 @@ while(service != "Done"):
         "clusterName": {
         "type": "string",
         "defaultValue": "aks101cluster"
-      },
-      "location": {
-        "type": "string",
-        "defaultValue": "[resourceGroup().location]"
-      },
-      "dnsPrefix": {
-        "type": "string"
-      },
-      "osDiskSizeGB": {
-        "type": "int",
-        "defaultValue": 0,
-        "maxValue": 1023,
-        "minValue": 0
-      },
-      "agentCount": {
-        "type": "int",
-        "defaultValue": 3,
-        "maxValue": 50,
-        "minValue": 1
-      },
-      "agentVMSize": {
-        "type": "string",
-        "defaultValue": "Standard_D2s_v3"
-      },
-      "linuxAdminUsername": {
-        "type": "string"
-      },
-      "sshRSAPublicKey": {
-        "type": "string"
-      }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "dnsPrefix": {
+            "type": "string"
+        },
+        "osDiskSizeGB": {
+            "type": "int",
+            "defaultValue": 0,
+            "maxValue": 1023,
+            "minValue": 0
+        },
+        "agentCount": {
+            "type": "int",
+            "defaultValue": 3,
+            "maxValue": 50,
+            "minValue": 1
+        },
+        "agentVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3"
+        },
+        "linuxAdminUsername": {
+            "type": "string"
+        },
+        "sshRSAPublicKey": {
+            "type": "string"
+        }
         })
         resourceObj.append({
                     "type": "Microsoft.ContainerService/managedClusters",
@@ -288,6 +289,86 @@ while(service != "Done"):
         "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('clusterName'))).fqdn]"
       }
         })
+    elif(service == "AppService"):
+        resourceList.remove("AppService")
+        servicesList.append("AppService")
+        paramObj.update({
+        "webAppName": {
+      "type": "string",
+      "defaultValue": "[format('webApp-{0}', uniqueString(resourceGroup().id))]",
+      "minLength": 2
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "B1"
+    },
+    "linuxFxVersion": {
+      "type": "string",
+      "defaultValue": "DOTNETCORE|3.0"
+    },
+    "repoUrl": {
+      "type": "string",
+      "defaultValue": " "
+    }
+        })
+        varObj.update({
+            "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('webAppName'))]"
+        })
+        resourceObj.append({
+            "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-02-01",
+      "name": "[variables('appServicePlanPortalName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "kind": "linux",
+      "properties": {
+        "reserved": True
+      }
+    })
+        resourceObj.append(
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2021-02-01",
+      "name": "[parameters('webAppName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "httpsOnly": True,
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]",
+        "siteConfig": {
+          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          "minTlsVersion": "1.2",
+          "ftpsState": "FtpsOnly"
+        }
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]"
+      ]
+    })
+        resourceObj.append(
+    {
+      "condition": "[contains(parameters('repoUrl'), 'http')]",
+      "type": "Microsoft.Web/sites/sourcecontrols",
+      "apiVersion": "2021-02-01",
+      "name": "[format('{0}/{1}', parameters('webAppName'), 'web')]",
+      "properties": {
+        "repoUrl": "[parameters('repoUrl')]",
+        "branch": "master",
+        "isManualIntegration": True
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+      ]
+        })
+    #end
     elif(service == "Done"):
         break
     else:

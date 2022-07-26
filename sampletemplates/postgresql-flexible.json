@@ -25,7 +25,7 @@
       },
       "dbInstanceType": {
         "type": "string",
-        "defaultValue": "Standard_D4ds_v4"
+        "defaultValue": "Standard_D2ds_v4"
       },
       "haMode": {
         "type": "string",

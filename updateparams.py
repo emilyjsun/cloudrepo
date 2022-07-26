@@ -47,7 +47,7 @@ for s in servicesList:
     elif(s == "Kubernetes"):
         clusterName = input("Cluster Name: ")
         prefix = input("DNS Prefix: ")
-        user = input("Linux Admin Username:" )
+        user = input("Linux Admin Username: ")
         ssh = input("ssh RSA Public Key: ")
         paramObj.update({
             "clusterName": {
@@ -63,6 +63,13 @@ for s in servicesList:
                 "value": ssh
             }
 
+        })
+    elif(s == "AppService"):
+        webAppName = input("Web App Name: ")
+        paramObj.update({
+            "webAppName": {
+            "value": webAppName
+            }
         })
     else:
         print("invalid")

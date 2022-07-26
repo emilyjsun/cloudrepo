@@ -18,7 +18,7 @@ python updateparams.py
 echo "Deploying..."
 
 az deployment group create \
---name clideploy \
+--name appdeploy \
 --resource-group $resourceGroupName \
 --template-file $templateFile \
 --parameters $parameterFile 
