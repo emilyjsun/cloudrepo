@@ -46,10 +46,13 @@ for s in servicesList:
                 "sshRSAPublicKey": {"value": ssh},
             }
         )
-        
+
     elif s == "AppService":
         webAppName = input("Web App Name: ")
         paramObj.update({"webAppName": {"value": webAppName}})
+    elif s == "ContainerInstance":
+        containerName = input("Container Instance Name: ")
+        paramObj.update({"containerName": {"value": containerName}})
     else:
         print("invalid")
 

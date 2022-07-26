@@ -18,11 +18,12 @@ outputObj = store["outputs"]
 # print(outputObj)
 
 resourceList = [
-    "StorageAccount",
-    "ContainerRegistry",
-    "PostgreSQLFlexible",
-    "Kubernetes",
     "AppService",
+    "ContainerInstance",
+    "ContainerRegistry",
+    "Kubernetes",
+    "PostgreSQLFlexible",
+    "StorageAccount",
     "Done",
 ]
 servicesList = []
@@ -323,6 +324,76 @@ while service != "Done":
                 ],
             }
         )
+    # add container instance
+    elif service == "ContainerInstance":
+        resourceList.remove("ContainerInstance")
+        servicesList.append("ContainerInstance")
+        paramObj.update(
+            {
+                "containerName": {
+                    "type": "string",
+                    "defaultValue": "acilinuxpublicipcontainergroup",
+                },
+                "location": {
+                    "type": "string",
+                    "defaultValue": "[resourceGroup().location]",
+                },
+                "image": {
+                    "type": "string",
+                    "defaultValue": "mcr.microsoft.com/azuredocs/aci-helloworld",
+                },
+                "port": {"type": "int", "defaultValue": 80},
+                "cpuCores": {"type": "int", "defaultValue": 1},
+                "memoryInGb": {"type": "int", "defaultValue": 2},
+                "restartPolicy": {
+                    "type": "string",
+                    "defaultValue": "Always",
+                    "allowedValues": ["Always", "Never", "OnFailure"],
+                },
+            }
+        )
+        resourceObj.append(
+            {
+                "type": "Microsoft.ContainerInstance/containerGroups",
+                "apiVersion": "2021-09-01",
+                "name": "[parameters('containerName')]",
+                "location": "[parameters('location')]",
+                "properties": {
+                    "containers": [
+                        {
+                            "name": "[parameters('containerName')]",
+                            "properties": {
+                                "image": "[parameters('image')]",
+                                "ports": [
+                                    {"port": "[parameters('port')]", "protocol": "TCP"}
+                                ],
+                                "resources": {
+                                    "requests": {
+                                        "cpu": "[parameters('cpuCores')]",
+                                        "memoryInGB": "[parameters('memoryInGb')]",
+                                    }
+                                },
+                            },
+                        }
+                    ],
+                    "osType": "Linux",
+                    "restartPolicy": "[parameters('restartPolicy')]",
+                    "ipAddress": {
+                        "type": "Public",
+                        "ports": [{"port": "[parameters('port')]", "protocol": "TCP"}],
+                    },
+                },
+            }
+        )
+        outputObj.update(
+            {
+                "containerIPv4Address": {
+                    "type": "string",
+                    "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups', parameters('containerName'))).ipAddress.ip]",
+                }
+            }
+        )
+
     # end
     elif service == "Done":
         break
