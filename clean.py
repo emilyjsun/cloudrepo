@@ -1,6 +1,6 @@
 import json
 
-#clean template
+# clean template
 file = open("personalizedeploy.json", "r")
 store = json.loads(file.read())
 file.close()
@@ -11,18 +11,16 @@ store = {
     "parameters": {},
     "variables": {},
     "resources": [],
-    "outputs":{}
+    "outputs": {},
 }
 
-with open("personalizedeploy.json", 'w') as json_file:
-    json.dump(store, json_file, 
-                        indent=4,  
-                        separators=(',',': '))
+with open("personalizedeploy.json", "w") as json_file:
+    json.dump(store, json_file, indent=4, separators=(",", ": "))
 
 json_file.close()
 
 
-#clean parameters
+# clean parameters
 file = open("personalizedeploy.parameters.json", "r")
 store = json.loads(file.read())
 file.close()
@@ -30,12 +28,10 @@ file.close()
 store = {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {}
+    "parameters": {},
 }
 
-with open("personalizedeploy.parameters.json", 'w') as json_file:
-    json.dump(store, json_file, 
-                        indent=4,  
-                        separators=(',',': '))
+with open("personalizedeploy.parameters.json", "w") as json_file:
+    json.dump(store, json_file, indent=4, separators=(",", ": "))
 
 json_file.close()
